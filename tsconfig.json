@@ -1,0 +1,17 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  "compilerOptions": {
+    "typeRoots": ["./node_modules/@types", "./src/@types"],
+    "types": ["styled-components"],
+    "plugins": [
+      {
+        "name": "typescript-styled-plugin",
+        "tags": ["styled", "css", "injectGlobal"]
+      }
+    ]
+  }
+}
