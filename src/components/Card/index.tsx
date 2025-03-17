@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BingoCell,
   BingoGrid,
@@ -7,11 +7,14 @@ import {
   Content,
   Header,
 } from "./style";
+import { CiFaceSmile } from "react-icons/ci";
+
+const CACHEBINGO = "bingo-cache";
 
 interface ColsType {
   B: number[];
   I: number[];
-  N: number[] | string[];
+  N: Array<number | "FREE">;
   G: number[];
   O: number[];
 }
@@ -25,22 +28,58 @@ const generateBingoNumbers = () => {
     O: Array.from({ length: 5 }, () => Math.floor(Math.random() * 15) + 61),
   };
 
-  cols.N[2] = "Free";
+  cols.N[2] = "FREE";
   return cols;
 };
 
 export const Card: React.FC = () => {
-  const [numbers] = useState(generateBingoNumbers());
+  const [numbers, setNumbers] = useState<ColsType>(generateBingoNumbers());
   const [selectedCells, setSelectedCells] = useState<Set<string>>(new Set());
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // dados do cache
+  useEffect(() => {
+    const loadFromCache = async () => {
+      try {
+        const cache = await caches.open(CACHEBINGO);
+        const response = await cache.match("bingo-data");
+        if (response) {
+          const data = await response.json();
+          setNumbers(data.numbers);
+          setSelectedCells(new Set(data.selectedCells));
+        }
+        console.log(response);
+      } catch (error) {
+        console.error("Erro ao acessar cache:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadFromCache();
+  }, []);
+
+  // salvar dados no cache
+  useEffect(() => {
+    const saveToCache = async () => {
+      try {
+        const data = { numbers, selectedCells: [...selectedCells] };
+        const response = new Response(JSON.stringify(data));
+        const cache = await caches.open(CACHEBINGO);
+        await cache.put("bingo-data", response);
+      } catch (error) {
+        console.error("Erro ao salvar cache:", error);
+      }
+    };
+
+    if (!isLoading) {
+      saveToCache();
+    }
+  }, [numbers, selectedCells, isLoading]);
 
   const handleCellClick = (cellKey: string) => {
     setSelectedCells((prev) => {
       const newSet = new Set(prev);
-      if (newSet.has(cellKey)) {
-        newSet.delete(cellKey);
-      } else {
-        newSet.add(cellKey);
-      }
+      newSet.has(cellKey) ? newSet.delete(cellKey) : newSet.add(cellKey);
       return newSet;
     });
   };
@@ -57,18 +96,21 @@ export const Card: React.FC = () => {
         </Header>
 
         <BingoGrid>
-          {["B", "I", "N", "G", "O"].map((letter, colIndex) => (
+          {["B", "I", "N", "G", "O"].map((letter) => (
             <div className="column" key={letter}>
               {numbers[letter as keyof typeof numbers].map((num, rowIndex) => {
-                const cellkey = `${letter}-${rowIndex}`;
+                const cellKey = `${letter}-${rowIndex}`;
+                const isFree =
+                  letter === "N" && rowIndex === 2 && num === "FREE";
+
                 return (
                   <BingoCell
-                    key={cellkey}
-                    onClick={() => handleCellClick(cellkey)}
-                    $selected={selectedCells.has(cellkey)}
-                    $isFree={num === "FREE"}
+                    key={cellKey}
+                    onClick={() => !isFree && handleCellClick(cellKey)}
+                    $selected={selectedCells.has(cellKey)}
+                    $isFree={isFree}
                   >
-                    {num}
+                    {isFree ? <CiFaceSmile size={60} /> : num}
                   </BingoCell>
                 );
               })}

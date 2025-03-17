@@ -1,4 +1,3 @@
-// providers/ThemeProvider.tsx
 import { ReactNode } from 'react';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import { useThemeStore } from '../store/theme/themeStore';

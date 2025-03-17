@@ -1,4 +1,3 @@
-// components/ThemeSwitcher.tsx
 import { useThemeStore } from "../../store/theme/themeStore";
 import { ThemeName } from "../../Theme/colors";
 import { ContentColor } from "./style";

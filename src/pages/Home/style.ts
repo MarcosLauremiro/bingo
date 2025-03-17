@@ -4,81 +4,100 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${(props) => props.theme.colors.primary};
-  height: 100vh;
-  flex-direction: column;
+  min-height: 100vh;
+  background: ${({ theme }) => theme.colors.primary};
 `;
 
 export const Content = styled.div`
+  max-width: 600px;
+  width: 100%;
+  margin: 2rem auto;
+  padding: 20px;
+  background: ${({ theme }) => theme.colors.neutral};
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+`;
+
+export const Header = styled.div`
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  text-align: center;
+  margin-bottom: 5px;
+
+  h1 {
+    margin: 0;
+    font-size: 3.5rem;
+    display: contents;
+    color: ${({ theme }) => theme.colors.primary};
+  }
+`;
+
+export const BingoLetter = styled.span`
+  color: ${({ theme }) => theme.colors.secondary};
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 10px;
+`;
+
+export const BingoGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+`;
+
+export const BingoCell = styled.div.attrs<{
+  $selected: boolean;
+  $isStatic: boolean;
+  $isInteractive: boolean;
+}>((props) => ({}))`
+  aspect-ratio: 1;
+  background: ${({ theme, $selected, $isStatic }) =>
+    $isStatic
+      ? theme.colors.tertiary
+      : $selected
+      ? theme.colors.secondary
+      : theme.colors.neutral};
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  text-align: center;
-  max-width: 400px;
-  width: 100%;
-`;
-
-export const InputBingo = styled.input`
-  padding: 16px 0;
-  text-indent: 10px;
-  border-radius: 8px;
-  border: none;
-  font-size: 1rem;
-  background-color: ${({ theme }) => theme.colors.secondary};
-  width: 250px;
-  color: ${({ theme }) => theme.colors.neutral};
-  @media (max-width: 768px) {
-    width: 150px;
-  }
-
-`;
-
-export const Bingo = styled.h1`
-  font-size: 6rem;
-  font-weight: 700;
-  color: #ff6b6b;
-  text-shadow: 1px 1px #e95d5d, 2px 2px #e04444, 3px 3px #d63030,
-    4px 4px #bd2424, 5px 5px #7a1c1c;
-  transition: transform 0.3s, text-shadow 0.3s;
-  letter-spacing: 2px;
-  margin: 20px 0;
-
-  &:hover {
-    transform: translateY(-2px);
-    text-shadow: 2px 2px #e95d5d, 4px 4px #e04444, 6px 6px #d63030,
-      8px 8px #bd2424, 10px 10px #7a1c1c;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 4rem;
-  }
-
-  /* Opcional: Adicionar contorno */
-  -webkit-text-stroke: 1px #d63030;
-  text-stroke: 1px #d63030;
-
-  user-select: none;
-`;
-
-export const Form = styled.form`
-  display: flex;
-  gap: 10px;
   align-items: center;
   justify-content: center;
-`;
-
-export const Button = styled.button`
-  background-color: ${({ theme }) => theme.colors.secondary};
-  color: ${({ theme }) => theme.colors.neutral};
-  height: 100%;
-  padding: 0 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
+  font-weight: bold;
+  font-size: .8rem;
+  transition: all 0.2s ease;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  cursor: ${({ $isInteractive }) => ($isInteractive ? "pointer" : "default")};
+  color: ${({ theme, $selected, $isStatic }) =>
+    $selected || $isStatic ? theme.colors.neutral : theme.colors.primary};
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.tertiary};
+    transform: ${({ $isInteractive }) =>
+      $isInteractive ? "scale(1.05)" : "none"};
+    box-shadow: ${({ $isInteractive, theme }) =>
+      $isInteractive ? `0 2px 8px ${theme.colors.primary}20` : "none"};
+  }
+
+  .selection-indicator {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: ${({ theme }) => theme.colors.tertiary};
+  }
+
+  svg {
+    width: 40%;
+    height: 40%;
   }
 `;

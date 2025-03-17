@@ -1,12 +1,9 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
-    display: flex;
-  background: ${({ theme }) => theme.colors.primary};
-`;
+export const Container = styled.div``;
 
 export const Content = styled.div`
-  max-width: 600px;
+  max-width: 350px;
   width: 100%;
   margin: 2rem auto;
   padding: 20px;
@@ -25,16 +22,16 @@ export const Header = styled.div`
   h1 {
     margin: 0;
     font-size: 2.5rem;
-    display: contents; /* Faz o h1 participar do grid */
+    display: contents;
+    color: ${({ theme }) => theme.colors.primary};
   }
 `;
 
 export const BingoLetter = styled.span`
-  color: #e74c3c;
+  color: ${({ theme }) => theme.colors.secondary};
   font-weight: bold;
   text-transform: uppercase;
   padding: 10px;
-  border-radius: 5px;
 `;
 
 export const BingoGrid = styled.div`
@@ -51,9 +48,13 @@ export const BingoGrid = styled.div`
 
 export const BingoCell = styled.div<{ $selected: boolean; $isFree: boolean }>`
   aspect-ratio: 1;
-  background: ${({ $selected, $isFree }) =>
-    $isFree ? "#2ecc71" : $selected ? "#3498db" : "#ffffff"};
-  border: 2px solid #bdc3c7;
+  background: ${({ theme, $selected, $isFree }) =>
+    $isFree
+      ? theme.colors.tertiary
+      : $selected
+      ? theme.colors.secondary
+      : theme.colors.neutral};
+  border: 2px solid ${({ theme }) => theme.colors.primary};
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -61,12 +62,12 @@ export const BingoCell = styled.div<{ $selected: boolean; $isFree: boolean }>`
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: ${({ $selected, $isFree }) =>
-    $selected || $isFree ? "#ffffff" : "#2c3e50"};
+  color: ${({ theme, $selected, $isFree }) =>
+    $selected || $isFree ? theme.colors.neutral : theme.colors.primary};
 
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px ${({ theme }) => theme.colors.primary}20;
   }
 
   &:active {
