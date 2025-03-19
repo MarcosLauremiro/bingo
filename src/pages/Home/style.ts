@@ -2,18 +2,24 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   background: ${({ theme }) => theme.colors.primary};
 `;
 
+export const PreHeader = styled.div`
+  h1 {
+    color: ${({ theme }) => theme.colors.tertiary};
+  }
+`;
+
 export const Content = styled.div`
-  max-width: 600px;
+  max-width: 420px;
   width: 100%;
   margin: 2rem auto;
   padding: 20px;
-  background: ${({ theme }) => theme.colors.neutral};
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 `;
@@ -70,7 +76,7 @@ export const BingoCell = styled.div.attrs<{
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  font-size: .8rem;
+  font-size: 0.8rem;
   transition: all 0.2s ease;
   position: relative;
   width: 80px;

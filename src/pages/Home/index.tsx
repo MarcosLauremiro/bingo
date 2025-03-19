@@ -1,8 +1,15 @@
 import { CiFaceSmile } from "react-icons/ci";
-import { BingoCell, BingoGrid, BingoLetter, Container, Header } from "./style";
+import {
+  BingoCell,
+  BingoGrid,
+  BingoLetter,
+  Container,
+  Content,
+  Header,
+  PreHeader,
+} from "./style";
 import { useState } from "react";
-import { Content } from "../Login/style";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaRegPlayCircle } from "react-icons/fa";
 import {
   WiHorizonAlt,
@@ -14,6 +21,8 @@ import { HiFire } from "react-icons/hi";
 import { useThemeStore } from "../../store/theme/themeStore";
 import { PiPlant } from "react-icons/pi";
 import { VscPerson } from "react-icons/vsc";
+import { BiLogOutCircle } from "react-icons/bi";
+import { capitalizeFirstLetter } from "../../utils/capitalizerFirst";
 
 interface CellData {
   content: string | number | React.JSX.Element;
@@ -70,7 +79,7 @@ export const Home: React.FC = () => {
           content: <HiFire />,
           onClick: () => setCurrentTheme("orange"),
         },
-        { content: <WiUmbrella /> },
+        { content: <WiUmbrella />, path: "/game" },
       ],
       G: [
         { content: <WiUmbrella />, path: "/game" },
@@ -86,11 +95,16 @@ export const Home: React.FC = () => {
           content: <PiPlant />,
           onClick: () => setCurrentTheme("green"),
         },
-        { content: <WiNightAltSnowThunderstorm /> },
+        {
+          content: <BiLogOutCircle />,
+          onClick: () => {
+            handleLogout();
+          },
+        },
       ],
       O: [
         { content: "Jogar", path: "/game" },
-        { content: <FaRegPlayCircle /> },
+        { content: <FaRegPlayCircle />, path: "/game" },
         { content: "Jogar", path: "/game" },
         {
           content: <WiMoonWaxingCrescent2 />,
@@ -106,12 +120,24 @@ export const Home: React.FC = () => {
     return cols;
   };
 
+  const navigate = useNavigate();
   const [cells] = useState(generateMenuCells());
   const [selectedCells] = useState<Set<string>>(new Set());
   const { setCurrentTheme } = useThemeStore();
 
+  const handleLogout = () => {
+    localStorage.removeItem("@name-game");
+    navigate("/");
+  };
+
+  const nameuser = capitalizeFirstLetter(
+    localStorage.getItem("@name-game") || ""
+  );
   return (
     <Container>
+      <PreHeader>
+        <h1>Olá, {nameuser}</h1>
+      </PreHeader>
       <Content>
         <Header>
           <h1>
